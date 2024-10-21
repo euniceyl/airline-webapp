@@ -1,0 +1,95 @@
+{% include 'top.html' %}
+
+<div id="content" class="container my-4">
+    <h1 class="page-title">{{page.get('title', 'Airports')}}</h1>
+    <form method="GET" action="{{ url_for('list_airports') }}" class="form-inline justify-content-center mb-4">
+        <div class="form-group mb-2">
+            <label for="end_station" class="mr-2">Filter by IATA Code:</label>
+            <select id="end_station" name="end_station" class="form-control">
+                <option value="">--Select an Airport--</option>
+                {% for code in valid_iata_codes %}
+                    <option value="{{ code }}">{{ code }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary mb-2 ml-2">Search</button>
+    </form>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+               {% if session['isadmin'] == True %}
+                <th>Delete</th>
+                <th>AirportID</th>
+                <th>Name</th>
+                <th>IATACode</th>
+                <th>City</th>
+                <th>Country</th>
+                <th>Update</th>
+               {% else %}
+                <th>AirportID</th>
+                <th>Name</th>
+                <th>IATACode</th>
+                <th>City</th>
+                <th>Country</th>
+               {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in airports %}
+            <tr class="align-items-center">
+                {% if session['isadmin'] == True %}
+                    <td> 
+                        {% if item['isadmin'] == True %}
+                            <button onclick="alert('This would delete airport {{item['airportid']}} by calling url_for(\'delete_airport({{item['airportid']}})\')')" class="btn btn-danger">Delete</button>
+                        {% else %}
+                            <a href="{{ url_for('delete_airport', airportid=item.airportid) }}" class="btn btn-danger">Delete</a>
+                        {% endif %}
+                    </td>
+                        <td class="align-middle">{{item['airportid']}}</td>
+                        <td class="align-middle">{{item['name']}}</td>
+                        <td class="align-middle">{{item['iatacode']}}</td>
+                        <td class="align-middle">{{item['city']}}</td>
+                        <td class="align-middle">{{item['country']}}</td>
+                        <td><a class="btn btn-primary" href="{{ url_for('edit_airport', airportid=item.airportid) }}">Edit</a></td>
+                {% else %}
+                    <td class="align-middle">{{item['airportid']}}</td>
+                    <td class="align-middle">{{item['name']}}</td>
+                    <td class="align-middle">{{item['iatacode']}}</td>
+                    <td class="align-middle">{{item['city']}}</td>
+                    <td class="align-middle">{{item['country']}}</td>
+                    <td class="align-middle"><i>Admin only</i></td>
+                {% endif %} 
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if page.get('current_page') %}
+<nav aria-label="Page navigation" class="my-4">
+    <ul class="pagination justify-content-center">
+        {% if page['current_page'] > 1 %}
+            <li class="page-item">
+                <a class="page-link" href="{{ url_for('list_airports', page=page['current_page'] - 1) }}">Previous</a>
+            </li>
+        {% endif %}
+        <li class="page-item">
+            <span class="page-link">Page {{ page['current_page'] }}</span>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="{{ url_for('list_airports', page=page['current_page'] + 1) }}">Next</a>
+        </li>
+    </ul>
+</nav>
+{% endif %}
+
+<form method="GET" action="" class="form-inline justify-content-center">
+    <div class="form-group mb-2">
+        <label for="page" class="mr-2">Jump to page:</label>
+        <input type="number" class="form-control" id="page" name="page" min="1" required>
+    </div>
+    <button type="submit" class="btn btn-primary mb-2 ml-2">Go</button>
+</form>
+</div>
+
+{% include 'end.html' %}

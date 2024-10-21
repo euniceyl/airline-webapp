@@ -1,0 +1,23 @@
+{% include 'top.html' %}
+
+<div id="content" class="container my-4">
+    <h1 class="page-title">Airport Statistics by Country</h1>
+    <br/>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Country</th>
+                <th>Airport Count</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in airports %}
+            <tr>
+                <td>{{item['country']}}</td>
+                <td>{{item['count']}}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% include 'end.html' %}

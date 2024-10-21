@@ -1,0 +1,17 @@
+{% include 'top.html' %}
+
+<div id="content" class="container my-4">
+
+<h1 class="page-title">Airport Search</h1>
+
+<form name="searchform" class="" method="POST" action="{{url_for('search_airports_byID')}}">
+    <div class="form-group">
+        <label>Enter Airport ID</label>
+        <input class="form-control" type="text" name="airportid" placeholder="Airport ID" required>
+    </div>
+    <button class="btn btn-primary" type="submit">Search</button>
+</form>
+
+</div>
+
+{% include 'end.html' %}
